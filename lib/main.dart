@@ -29,14 +29,13 @@ class _MyAppState extends State<MyApp> {
         SharedPrefs.getIntValue(key: SharedPrefs.userIdKey) != null;
     return ScreenUtilInit(
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: isUserLoggedIn ? DashboardScreen() : const LoginScreen(),
-      ),
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: isUserLoggedIn ? DashboardScreen() : LoginScreen()),
     );
   }
 }

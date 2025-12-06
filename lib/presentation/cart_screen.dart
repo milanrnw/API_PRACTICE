@@ -30,13 +30,15 @@ class _CartScreenState extends State<CartScreen> {
     });
     final userId = SharedPrefs.getIntValue(key: SharedPrefs.userIdKey);
     if (userId == null) {
-      await AuthService.logoutUser(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await AuthService.logoutUser(context);
+      });
       return;
     }
     final response =
         await http.get(Uri.parse('${ApiRequests.getCartItems}/$userId'));
     cartDetails = CartModel.fromJson(jsonDecode(response.body));
-
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });

@@ -41,7 +41,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
     final userId = decodedToken["sub"];
-    await SharedPrefs.setIntValue(key: SharedPrefs.userIdKey, value: userId);
+    if (userId == null) {
+      throw Exception("User ID not found in token");
+    }
+
+    final parsedId = userId is int ? userId : int.parse(userId.toString());
+    await SharedPrefs.setIntValue(key: SharedPrefs.userIdKey, value: parsedId);
 
     if (!mounted) return;
 
@@ -105,9 +110,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     final password = passwordController.text.trim();
                     final username = usernamerController.text.trim();
                     if (password.isNotEmpty && username.isNotEmpty) {
-                      await provideLogin(
+                      setState(() {
+                        isLoading = true;
+                      });
+                      try {
+                        await provideLogin(
                           providedUsername: username,
-                          providedPassword: password);
+                          providedPassword: password,
+                        );
+                      } catch (e) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Login failed: $e',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -122,11 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }
                   },
-                  child: isLoading
-                      ? CircularProgressIndicator()
-                      : Text(
-                          'Login',
-                        ),
+                  child:
+                      isLoading ? CircularProgressIndicator() : Text('Login'),
                 )
               ],
             ),

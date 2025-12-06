@@ -31,13 +31,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final userId = await SharedPrefs.getIntValue(key: SharedPrefs.userIdKey);
     if (userId == null) {
-      await AuthService.logoutUser(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await AuthService.logoutUser(context);
+      });
       return;
     }
 
     final response = await http.get(Uri.parse('${ApiRequests.users}/$userId'));
     profileData = ProfileModel.fromJson(jsonDecode(response.body));
-
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });
@@ -46,20 +48,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: isLoading ? Center(
-        child: Text("Loading User Data",
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 20,
-        ),
-        ),
-      )
-      :
-      Align(alignment: Alignment.topCenter,
-        child: ProfileCard(
-          profileDetails: profileData,
-        ),
-      )
-    );
+        child: isLoading
+            ? Center(
+                child: Text(
+                  "Loading User Data",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                ),
+              )
+            : Align(
+                alignment: Alignment.topCenter,
+                child: ProfileCard(
+                  profileDetails: profileData,
+                ),
+              ));
   }
 }
