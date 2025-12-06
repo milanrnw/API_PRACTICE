@@ -11,6 +11,14 @@ A Flutter project designed to practice API integration and state management. The
 - **User Profile**: View user details.
 - **State Management**: Uses `setState` and `SharedPreferences` for session persistence.
 
+
+## Screenshots
+
+
+<p align="center">
+  <img src="assets/screenshots/preview.png" width="22%" alt="preview" />
+</p>
+
 ## Tech Stack
 
 - **Flutter**: UI toolkit.
