@@ -16,7 +16,7 @@ A Flutter project designed to practice API integration and state management. The
 
 
 <p align="center">
-  <img src="assets/screenshots/preview.png" width="22%" alt="preview" />
+  <img src="assets/screenshots/preview.png" alt="preview" />
 </p>
 
 ## Tech Stack
